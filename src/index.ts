@@ -6,8 +6,6 @@ const app: FastifyInstance = fastify();
 
 app.get("/", async (request, reply) => {
 
-    
-
     reply.send( {message: "hello world"});
 });
 
