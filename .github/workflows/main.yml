@@ -35,12 +35,10 @@ jobs:
       - name: Mark PR as draft if build fails
         if: failure()  # This step runs only if the previous step fails
         run: |
-          PR_NUMBER=$(jq --raw-output .pull_request.number $GITHUB_EVENT_PATH)
-          if [ -n "$PR_NUMBER" ]; then
-            echo "Marking PR #$PR_NUMBER as draft"
-            curl -X PATCH \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github.v3+json" \
-              https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER \
-              -d '{"draft": true}'
-          fi
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          echo "Marking PR #$PR_NUMBER as draft"
+          curl -X PATCH \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER \
+            -d '{"draft": true}'
