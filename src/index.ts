@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 
 import fastify = require("fastify");
 
-const app: FastifyInstance = fastify();
+// const app: FastifyInstance = fastify();
 
 app.get("/", async (request, reply) => {
 
