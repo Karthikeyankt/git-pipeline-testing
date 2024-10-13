@@ -1,0 +1,46 @@
+name: Pull Request Build and Mark as Draft on Failure
+
+# Trigger on pull request creation, update, or reopening
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14' # Change this based on your Node.js version
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run the build script
+      - name: Run build script
+        run: npm run build
+
+      # Mark PR as draft if build fails
+      - name: Mark PR as draft if build fails
+        if: failure()  # This step runs only if the previous step fails
+        run: |
+          PR_NUMBER=$(jq --raw-output .pull_request.number $GITHUB_EVENT_PATH)
+          if [ -n "$PR_NUMBER" ]; then
+            echo "Marking PR #$PR_NUMBER as draft"
+            curl -X PATCH \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER \
+              -d '{"draft": true}'
+          fi
