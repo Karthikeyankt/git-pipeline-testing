@@ -2,11 +2,11 @@ import { FastifyInstance } from "fastify";
 
 import fastify = require("fastify");
 
-// const app: FastifyInstance = fastify();
+const app: FastifyInstance = fastify();
 
 app.get("/", async (request, reply) => {
 
-    // reply.send( {message: "hello world"});
+    reply.send( {message: "hello world"});
 });
 
 app.listen(3000, (err, address) => {
