@@ -6,7 +6,7 @@ import fastify = require("fastify");
 
 app.get("/", async (request, reply) => {
 
-    reply.send( {message: "hello world"});
+    // reply.send( {message: "hello world"});
 });
 
 app.listen(3000, (err, address) => {
